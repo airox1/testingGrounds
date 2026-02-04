@@ -1,0 +1,117 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Lucky Mirage Arcade</title>
+    <link rel="stylesheet" href="styles.css" />
+  </head>
+  <body>
+    <main class="app">
+      <header class="hero">
+        <div>
+          <p class="tag">FAKE GAMBLING ARCADE</p>
+          <h1>Lucky Mirage Slots</h1>
+          <p class="subtitle">
+            A simulated slot machine with virtual credits only. No real money, no
+            cash-out, just pure chance and fun.
+          </p>
+        </div>
+        <div class="bank">
+          <div>
+            <span class="label">Balance</span>
+            <strong id="balance">$0</strong>
+          </div>
+          <div>
+            <span class="label">Wagered</span>
+            <strong id="wagered">$0</strong>
+          </div>
+          <div>
+            <span class="label">Profit/Loss</span>
+            <strong id="profit">$0</strong>
+          </div>
+        </div>
+      </header>
+
+      <section class="panel">
+        <div class="machine">
+          <div class="reels" aria-live="polite">
+            <div class="reel" id="reel-1">🍒</div>
+            <div class="reel" id="reel-2">🔔</div>
+            <div class="reel" id="reel-3">🍋</div>
+          </div>
+          <p class="result" id="result">Load credits to start spinning.</p>
+          <div class="controls">
+            <label>
+              Bet per spin
+              <input id="bet" type="number" min="1" step="1" value="10" />
+            </label>
+            <label>
+              Add credits
+              <div class="stack">
+                <input id="deposit" type="number" min="10" step="10" value="100" />
+                <button id="deposit-btn" type="button">Load</button>
+              </div>
+            </label>
+            <button id="spin" type="button">Spin</button>
+          </div>
+        </div>
+
+        <aside class="sidebar">
+          <div class="card">
+            <h2>Pay Table</h2>
+            <ul class="payouts">
+              <li><span>🍀 🍀 🍀</span><strong>30×</strong></li>
+              <li><span>⭐ ⭐ ⭐</span><strong>20×</strong></li>
+              <li><span>🍒 🍒 🍒</span><strong>12×</strong></li>
+              <li><span>🔔 🔔 🔔</span><strong>8×</strong></li>
+              <li><span>🍋 🍋 🍋</span><strong>5×</strong></li>
+              <li><span>Any pair</span><strong>2×</strong></li>
+            </ul>
+            <p class="note">All wins include your original bet.</p>
+          </div>
+          <div class="card">
+            <h2>Session Stats</h2>
+            <dl>
+              <div>
+                <dt>Spins</dt>
+                <dd id="spins">0</dd>
+              </div>
+              <div>
+                <dt>Biggest Win</dt>
+                <dd id="biggest-win">$0</dd>
+              </div>
+              <div>
+                <dt>Last Win</dt>
+                <dd id="last-win">$0</dd>
+              </div>
+            </dl>
+          </div>
+        </aside>
+      </section>
+
+      <section class="panel">
+        <div class="card">
+          <h2>House Rules</h2>
+          <ul class="rules">
+            <li>Virtual credits only. This is not real gambling.</li>
+            <li>Each spin consumes your current bet.</li>
+            <li>Three-of-a-kind pays the listed multiplier.</li>
+            <li>Any two matching symbols pays 2×.</li>
+            <li>No withdrawals, no real money transactions.</li>
+          </ul>
+        </div>
+        <div class="card">
+          <h2>Recent Spins</h2>
+          <ol id="history" class="history"></ol>
+        </div>
+      </section>
+    </main>
+
+    <footer class="footer">
+      <p>Lucky Mirage Arcade &middot; Entertainment Only</p>
+    </footer>
+
+    <script src="script.js"></script>
+  </body>
+</html>
