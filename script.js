@@ -2,6 +2,8 @@ const equationEl = document.getElementById("equation");
 const resultEl = document.getElementById("result");
 const keypad = document.querySelector(".keypad");
 
+const ERROR_VALUE = "Error";
+
 const calculatorState = {
   currentValue: "0",
   previousValue: null,
@@ -11,6 +13,7 @@ const calculatorState = {
 
 const formatDisplayValue = (value) => {
   if (value === "") return "0";
+  if (value === ERROR_VALUE) return ERROR_VALUE;
   const number = Number(value);
   if (Number.isNaN(number)) return value;
   return Number.isInteger(number)
@@ -44,6 +47,12 @@ const resetCalculator = () => {
 };
 
 const handleDigit = (digit) => {
+  if (calculatorState.currentValue === ERROR_VALUE) {
+    calculatorState.currentValue = digit;
+    calculatorState.awaitingNextValue = false;
+    updateDisplay();
+    return;
+  }
   if (calculatorState.awaitingNextValue) {
     calculatorState.currentValue = digit;
     calculatorState.awaitingNextValue = false;
@@ -57,6 +66,12 @@ const handleDigit = (digit) => {
 };
 
 const handleDecimal = () => {
+  if (calculatorState.currentValue === ERROR_VALUE) {
+    calculatorState.currentValue = "0.";
+    calculatorState.awaitingNextValue = false;
+    updateDisplay();
+    return;
+  }
   if (calculatorState.awaitingNextValue) {
     calculatorState.currentValue = "0.";
     calculatorState.awaitingNextValue = false;
@@ -70,6 +85,9 @@ const handleDecimal = () => {
 };
 
 const compute = (firstValue, secondValue, operator) => {
+  if (firstValue === ERROR_VALUE || secondValue === ERROR_VALUE) {
+    return ERROR_VALUE;
+  }
   const first = Number(firstValue);
   const second = Number(secondValue);
   if (Number.isNaN(first) || Number.isNaN(second)) return secondValue;
@@ -82,7 +100,7 @@ const compute = (firstValue, secondValue, operator) => {
     case "*":
       return (first * second).toString();
     case "/":
-      return second === 0 ? "Error" : (first / second).toString();
+      return second === 0 ? ERROR_VALUE : (first / second).toString();
     default:
       return secondValue;
   }
@@ -90,6 +108,10 @@ const compute = (firstValue, secondValue, operator) => {
 
 const handleOperator = (nextOperator) => {
   const { currentValue, previousValue, operator, awaitingNextValue } = calculatorState;
+
+  if (currentValue === ERROR_VALUE) {
+    return;
+  }
 
   if (operator && awaitingNextValue) {
     calculatorState.operator = nextOperator;
@@ -103,6 +125,12 @@ const handleOperator = (nextOperator) => {
     const computed = compute(previousValue, currentValue, operator);
     calculatorState.previousValue = computed;
     calculatorState.currentValue = computed;
+    if (computed === ERROR_VALUE) {
+      calculatorState.operator = null;
+      calculatorState.awaitingNextValue = false;
+      updateDisplay();
+      return;
+    }
   }
 
   calculatorState.operator = nextOperator;
@@ -111,6 +139,7 @@ const handleOperator = (nextOperator) => {
 };
 
 const handlePercent = () => {
+  if (calculatorState.currentValue === ERROR_VALUE) return;
   const value = Number(calculatorState.currentValue);
   if (Number.isNaN(value)) return;
   calculatorState.currentValue = (value / 100).toString();
@@ -118,6 +147,7 @@ const handlePercent = () => {
 };
 
 const handleToggleSign = () => {
+  if (calculatorState.currentValue === ERROR_VALUE) return;
   if (calculatorState.currentValue === "0") return;
   if (calculatorState.currentValue.startsWith("-")) {
     calculatorState.currentValue = calculatorState.currentValue.slice(1);
@@ -128,6 +158,7 @@ const handleToggleSign = () => {
 };
 
 const handleEquals = () => {
+  if (calculatorState.currentValue === ERROR_VALUE) return;
   if (!calculatorState.operator || calculatorState.awaitingNextValue) return;
   const computed = compute(
     calculatorState.previousValue,
